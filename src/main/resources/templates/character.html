@@ -6,10 +6,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="text/javascript" src="js/character.js"></script>
+    <link href="css/general.css" rel="stylesheet">
+    <link href="css/character.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Characters</title>
 </head>
 <body>
-<div id="char_network"></div>
+<div class="container-fluid full">
+    <div class="container-fluid bar"></div>
+    <div class="container-fluid main">
+        <div id="network_buttons" class="container button-container">
+            <div class="row button-row">
+                <div class="network-button"></div>
+            </div>
+            <div class="row button-row">
+                <div class="network-button"></div>
+            </div>
+            <div class="row button-row">
+                <div class="network-button"></div>
+            </div>
+        </div>
+        <div id="char_network"></div>
+    </div>
+</div>
 </body>
 </html>

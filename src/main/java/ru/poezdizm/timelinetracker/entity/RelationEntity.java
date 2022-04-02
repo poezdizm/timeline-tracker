@@ -29,8 +29,8 @@ public class RelationEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        RelationEntity user = (RelationEntity) o;
-        return id != null && Objects.equals(id, user.id);
+        RelationEntity relation = (RelationEntity) o;
+        return id != null && Objects.equals(id, relation.id);
     }
 
     @Override

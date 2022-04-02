@@ -31,15 +31,15 @@ public class CharacterEntity {
     @Column(name = "dead")
     private Boolean isDead;
 
-    @OneToMany(mappedBy = "from")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "from")
     private List<RelationEntity> relations;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CharacterEntity user = (CharacterEntity) o;
-        return id != null && Objects.equals(id, user.id);
+        CharacterEntity character = (CharacterEntity) o;
+        return id != null && Objects.equals(id, character.id);
     }
 
     @Override

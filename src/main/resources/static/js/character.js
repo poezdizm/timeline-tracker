@@ -1,3 +1,5 @@
+let network;
+
 $(document).ready(function() {
     getNetwork();
 });
@@ -29,5 +31,5 @@ function initNetwork(data) {
     };
     var options = {};
 
-    var network = new vis.Network(container, data, options);
+    network = new vis.Network(container, data, options);
 }

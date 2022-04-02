@@ -10,7 +10,9 @@ import ru.poezdizm.timelinetracker.model.RelationModel;
 import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,23 +21,35 @@ public class NetworkService {
     private final CharacterRepository characterRepository;
     private final RelationRepository relationRepository;
 
-    private List<CharacterEntity> characterCache;
     private List<RelationEntity> relationCache;
 
     public NetworkModel getFullNetwork() {
-        characterCache = characterRepository.findAll();
-        List<CharacterModel> characterModels = characterCache.stream().map(NetworkService::mapCharacter).toList();
+        List<CharacterModel> characterModels = characterRepository.findAll().stream()
+                .map(NetworkService::mapCharacter).toList();
         relationCache = relationRepository.findAll();
         List<RelationModel> relationModels = relationCache.stream().map(NetworkService::mapRelation).toList();
         return new NetworkModel(characterModels, relationModels);
     }
 
     public NetworkModel getFilteredNetwork(Integer id) {
-        List<CharacterModel> filteredCharacters = characterCache.stream()
-                .filter(e -> e.getId().equals(id) || e.getRelations().stream().anyMatch(r -> r.getTo().equals(id)))
-                .map(NetworkService::mapCharacter).toList();
-        List<RelationModel> filteredRelations = relationCache.stream().filter(e -> e.getFrom().equals(id))
-                .map(NetworkService::mapRelation).toList();
+        List<RelationModel> filteredRelations = new LinkedList<>();
+        List<CharacterModel> filteredCharacters = new LinkedList<>();
+        Optional<CharacterEntity> character = characterRepository.findById(id);
+        if (character.isEmpty()) return new NetworkModel(filteredCharacters, filteredRelations);
+        filteredCharacters.add(mapCharacter(character.get()));
+        for (RelationEntity relationEntity : relationCache) {
+            if (relationEntity.getFrom().equals(id) || relationEntity.getTo().equals(id)) {
+                Optional<CharacterEntity> relatedCharacter = null;
+                if (relationEntity.getFrom().equals(id)) {
+                    relatedCharacter = characterRepository.findById(relationEntity.getTo());
+                } else {
+                    relatedCharacter = characterRepository.findById(relationEntity.getFrom());
+                }
+                if (relatedCharacter.isEmpty()) continue;
+                filteredRelations.add(mapRelation(relationEntity));
+                filteredCharacters.add(mapCharacter(relatedCharacter.get()));
+            }
+        }
         return new NetworkModel(filteredCharacters, filteredRelations);
     }
 

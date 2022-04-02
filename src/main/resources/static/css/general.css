@@ -1,0 +1,17 @@
+.full {
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+}
+
+.bar {
+    background-color: #333333;
+    height: 6%;
+}
+
+.main {
+    height: 94%;
+    padding: 0;
+    background: rgb(228,228,228);
+    background: linear-gradient(90deg, rgba(228,228,228,1) 20%, rgba(242,242,242,1) 87%, rgba(242,242,242,1) 100%);
+}

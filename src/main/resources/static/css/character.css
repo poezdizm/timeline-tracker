@@ -1,0 +1,26 @@
+#char_network {
+    position: absolute;
+    height: inherit;
+    width: 100%;
+}
+
+.button-container {
+    height: 500px;
+    width: 15%;
+    margin-right: 3%;
+    margin-top: 3%;
+    float: right;
+    position: relative;
+}
+
+.button-row {
+    min-height: 10%;
+    max-height: 20%;
+    margin-top: 5%;
+}
+
+.network-button {
+    z-index:10;
+    background-color: goldenrod;
+    border-radius: 10px;
+}
