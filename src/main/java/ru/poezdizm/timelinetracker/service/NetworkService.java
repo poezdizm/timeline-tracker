@@ -27,6 +27,8 @@ public class NetworkService {
     private List<RelationEntity> relationCache;
 
     private static final String defaultColor = "#000000";
+    private static final Integer defaultMainSize = 35;
+    private static final Integer defaultOtherSize = 25;
 
     public NetworkModel getFullNetwork() {
         List<CharacterModel> characterModels = characterRepository.findAll().stream()
@@ -76,7 +78,11 @@ public class NetworkService {
     }
 
     private static CharacterModel mapCharacter(CharacterEntity entity) {
-        return CharacterModel.builder().id(entity.getId()).label(entity.getName()).image(entity.getImageUrl()).build();
+        return CharacterModel.builder().id(entity.getId())
+                .label(entity.getIsDead() ? entity.getName() + "\uD83D\uDC80" : entity.getName())
+                .image(entity.getImageUrl())
+                .size(entity.getIsMain() ? defaultMainSize : defaultOtherSize)
+                .build();
     }
 
     private static RelationModel mapRelation(RelationEntity entity) {

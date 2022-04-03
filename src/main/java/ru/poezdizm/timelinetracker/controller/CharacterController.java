@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.poezdizm.timelinetracker.model.NetworkModel;
 import ru.poezdizm.timelinetracker.service.NetworkService;
 
-import java.util.List;
-
 @Controller
 @RequestMapping(value = "/characters")
 @RequiredArgsConstructor

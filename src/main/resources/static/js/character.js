@@ -91,8 +91,32 @@ function initNetwork(data) {
     if (data.characterModels.length === 0) {
         $('.empty-label').removeClass('hidden');
     } else {
-        data.characterModels.forEach(c => c.shape = "circularImage");
-        data.relationModels.forEach(c => c.font = {align: "top"});
+        data.characterModels.forEach(c => {
+            c.color =  {border: '#000000'};
+            c.shadow = {
+                enabled: true,
+                color: 'rgba(0,0,0,0.5)',
+                size:5,
+                x:3,
+                y:5
+            };
+            if (c.image === null || c.image === "" || c.image === undefined) {
+                c.shape = "icon";
+                c.icon = {
+                    face: "'FontAwesome'",
+                    code: "\uf007",
+                    size: 50,
+                    color: "#333333"
+                };
+                delete c.image;
+            } else {
+                c.shape = "circularImage"
+            }
+        });
+        data.relationModels.forEach(c => {
+            c.font = {align: "top"};
+            c.length = 200;
+        });
 
         var nodes = new vis.DataSet(data.characterModels);
         var edges = new vis.DataSet(data.relationModels);
@@ -149,31 +173,30 @@ function changeChosen(event, buttonContainer, charLabels, relLabels, chooseButto
             chooseButtons.addClass('character');
             relLabels.addClass('hidden');
             charLabels.removeClass('hidden');
-            tweakButtons(event, chooseButtons, charLabels, relLabels, event.nodes[0], chosenChar, chosenRel);
+            tweakButtons(event, chooseButtons, charLabels, relLabels, event.nodes[0], chosenChar);
         } else {
             chooseButtons.removeClass('character');
             chooseButtons.addClass('relation');
             charLabels.addClass('hidden');
             relLabels.removeClass('hidden');
-            tweakButtons(event, chooseButtons, charLabels, relLabels, event.edges[0], chosenRel, chosenChar);
+            tweakButtons(event, chooseButtons, charLabels, relLabels, event.edges[0], chosenRel);
         }
         buttonContainer.addClass('shown');
     }
 }
 
-function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen, unChosen) {
+function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen) {
     if (chosen !== null) {
         if (elem === chosen) {
             chooseButtons.attr('disabled', true);
             chooseButtons.removeClass('network-button-active');
             chooseButtons.addClass('network-button');
         } else {
-            chooseButtons.attr('disabled', true);
+            chooseButtons.attr('disabled', false);
             chooseButtons.addClass('network-button-active');
             chooseButtons.removeClass('network-button');
         }
-    }
-    if (unChosen !== null) {
+    } else {
         chooseButtons.attr('disabled', false);
         chooseButtons.addClass('network-button-active');
         chooseButtons.removeClass('network-button');

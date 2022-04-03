@@ -15,4 +15,6 @@ public class CharacterModel {
 
     private String image;
 
+    private Integer size;
+
 }
