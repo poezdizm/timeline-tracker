@@ -1,8 +1,15 @@
 let network = null;
 let chosenChar = null;
 let chosenRel = null;
+let colorPicker;
 
 $(document).ready(function() {
+    colorPicker = new Huebee( '.color-input', {
+        setBGColor: true,
+        saturations: 1,
+        notation: 'hex'
+    });
+
     getNetwork();
     $('.network-choose').on('click', function(e) {
         if (!$(this).hasClass('disabled')) {
@@ -22,12 +29,25 @@ $(document).ready(function() {
 
     $('.network-edit').on('click', function(e) {
         if (network.getSelectedNodes().length === 0) {
-            $('#rel_modal').modal('show');
             setInputsForRelation(network.body.edges[network.getSelectedEdges()[0]]);
+            $('#rel_modal').modal('show');
         } else {
-            $('#char_modal').modal('show');
             setInputsForCharacter(network.body.nodes[network.getSelectedNodes()[0]]);
+            $('#char_modal').modal('show');
         }
+    });
+
+    $('#new_character').on('click', function(e) {
+        clearInputsForCharacter();
+        $('#char_modal').modal('show');
+    });
+    $('#new_relation').on('click', function(e) {
+        setInputsForRelation();
+        $('#rel_modal').modal('show');
+    });
+    $('#new_relation_type').on('click', function(e) {
+        clearInputsForTypes();
+        $('#type_modal').modal('show');
     });
 
     $('#character_save').on('click', function(e) {
@@ -44,6 +64,14 @@ $(document).ready(function() {
     });
     $('#rel_modal_close').on('click', function(e) {
         $('#rel_modal').modal('hide');
+    });
+
+    $('#type_save').on('click', function(e) {
+        saveType();
+        $('#type_modal').modal('hide');
+    });
+    $('#type_modal_close').on('click', function(e) {
+        $('#type_modal').modal('hide');
     });
 
     $('.network-delete').on('click', function(e) {
@@ -259,6 +287,14 @@ function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen)
     }
 }
 
+function clearInputsForCharacter() {
+    $('#char_id_input').val("");
+    $('#name_input').val("");
+    $('#image_input').val("");
+    $('#main_check').attr('checked', false);
+    $('#dead_check').attr('checked', false);
+}
+
 function setInputsForCharacter(node) {
     let name = node.options.label;
     let dead = false;
@@ -274,6 +310,9 @@ function setInputsForCharacter(node) {
 }
 
 function setInputsForRelation(edge) {
+    if (edge === undefined) {
+        edge = {id: "", options: {label:""}, fromId: "", toId: ""};
+    }
     $('#rel_id_input').val(edge.id);
 
     let characters = [];
@@ -316,11 +355,11 @@ function setInputsForRelation(edge) {
             types = data;
         }
     });
-    types.forEach(c => {
+    types.forEach(t => {
         $('#type_select').append($('<option>', {
-            value: c.id,
-            text: c.label,
-            selected: edge.options.label === c.label
+            value: t.id,
+            text: t.label,
+            selected: edge.options.label === t.label
         }));
     });
 }
@@ -383,5 +422,22 @@ function deleteRelation(id) {
         success : function(data, textStatus, jqXHR) {
             reInitNetwork();
         }
+    });
+}
+
+function clearInputsForTypes() {
+    $('#type_label_input').val("");
+}
+
+function saveType() {
+    let type = {};
+    type.label = $("#type_label_input").val();
+    type.color = $(".color-input").val();
+    $.ajax({
+        method: "POST",
+        url: "/relations/types",
+        dataType: "json",
+        data: JSON.stringify(type),
+        contentType: "application/json; charset=utf-8"
     });
 }

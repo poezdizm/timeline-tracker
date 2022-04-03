@@ -14,6 +14,7 @@ import ru.poezdizm.timelinetracker.repository.RelationRepository;
 import ru.poezdizm.timelinetracker.repository.RelationTypeRepository;
 import ru.poezdizm.timelinetracker.request.CharacterRequest;
 import ru.poezdizm.timelinetracker.request.RelationRequest;
+import ru.poezdizm.timelinetracker.request.RelationTypeRequest;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -85,9 +86,11 @@ public class NetworkService {
     }
 
     public CharacterModel updateCharacter(CharacterRequest request) {
-        Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
         CharacterEntity entity = new CharacterEntity();
-        if (optional.isPresent()) entity = optional.get();
+        if (request.getId() != null) {
+            Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
+            if (optional.isPresent()) entity = optional.get();
+        }
         entity.setName(request.getName());
         entity.setImageUrl(request.getImage());
         entity.setIsMain(request.getIsMain());
@@ -105,15 +108,25 @@ public class NetworkService {
     }
 
     public RelationModel updateRelation(RelationRequest request) {
-        Optional<RelationEntity> optional = relationRepository.findById(request.getId());
         RelationEntity entity = new RelationEntity();
-        if (optional.isPresent()) entity = optional.get();
+        if (request.getId() != null) {
+            Optional<RelationEntity> optional = relationRepository.findById(request.getId());
+            if (optional.isPresent()) entity = optional.get();
+        }
         entity.setFrom(request.getFrom());
         entity.setTo(request.getTo());
         entity.setType(request.getType() != null ?
                 relationTypeRepository.findById(request.getType()).orElse(null) : null);
         relationRepository.save(entity);
         return mapRelation(entity);
+    }
+
+    public RelationTypeModel createType(RelationTypeRequest request) {
+        RelationTypeEntity entity = new RelationTypeEntity();
+        entity.setLabel(request.getLabel());
+        entity.setColor(request.getColor());
+        relationTypeRepository.save(entity);
+        return mapRelationType(entity);
     }
 
     public void deleteRelation(Long id) {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.timelinetracker.model.RelationModel;
 import ru.poezdizm.timelinetracker.model.RelationTypeModel;
 import ru.poezdizm.timelinetracker.request.RelationRequest;
+import ru.poezdizm.timelinetracker.request.RelationTypeRequest;
 import ru.poezdizm.timelinetracker.service.NetworkService;
 
 import java.util.List;
@@ -25,6 +26,11 @@ public class RelationController {
     @PostMapping
     public @ResponseBody RelationModel editRelation(@RequestBody RelationRequest request) {
         return networkService.updateRelation(request);
+    }
+
+    @PostMapping(value = "/types")
+    public @ResponseBody RelationTypeModel createType(@RequestBody RelationTypeRequest request) {
+        return networkService.createType(request);
     }
 
     @PostMapping(value = "/delete")

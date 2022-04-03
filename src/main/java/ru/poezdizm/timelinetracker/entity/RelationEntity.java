@@ -16,7 +16,7 @@ import java.util.Objects;
 public class RelationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "from_char")
