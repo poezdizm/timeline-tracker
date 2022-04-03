@@ -26,7 +26,7 @@ public class NetworkService {
 
     private List<RelationEntity> relationCache;
 
-    private static String defaultColor = "#000000";
+    private static final String defaultColor = "#000000";
 
     public NetworkModel getFullNetwork() {
         List<CharacterModel> characterModels = characterRepository.findAll().stream()
@@ -58,6 +58,23 @@ public class NetworkService {
         return new NetworkModel(filteredCharacters, filteredRelations);
     }
 
+    public NetworkModel getOneRelationNetwork(Long id) {
+        List<RelationModel> filteredRelations = relationCache.stream().filter(e -> e.getId().equals(id))
+                .map(NetworkService::mapRelation).toList();
+        if (filteredRelations.isEmpty()) {
+            return null;
+        }
+        List<CharacterModel> filteredCharacters = new LinkedList<>();
+        Optional<CharacterEntity> characterFrom = characterRepository.findById(filteredRelations.get(0).getFrom());
+        Optional<CharacterEntity> characterTo = characterRepository.findById(filteredRelations.get(0).getTo());
+        if (characterFrom.isEmpty() || characterTo.isEmpty()) {
+            return null;
+        }
+        filteredCharacters.add(mapCharacter(characterFrom.get()));
+        filteredCharacters.add(mapCharacter(characterTo.get()));
+        return new NetworkModel(filteredCharacters, filteredRelations);
+    }
+
     private static CharacterModel mapCharacter(CharacterEntity entity) {
         return CharacterModel.builder().id(entity.getId()).label(entity.getName()).image(entity.getImageUrl()).build();
     }
@@ -66,7 +83,7 @@ public class NetworkService {
         if (entity.getType() == null) {
             entity.setType(new RelationTypeEntity(0, "", defaultColor));
         }
-        return RelationModel.builder().from(entity.getFrom()).to(entity.getTo())
+        return RelationModel.builder().id(entity.getId()).from(entity.getFrom()).to(entity.getTo())
                 .label(entity.getType().getLabel()).color(entity.getType().getColor()).build();
     }
 

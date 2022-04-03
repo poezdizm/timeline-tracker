@@ -9,6 +9,8 @@ import lombok.Setter;
 @Builder
 public class RelationModel {
 
+    private Long id;
+
     private Integer from;
 
     private Integer to;

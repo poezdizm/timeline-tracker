@@ -1,15 +1,23 @@
 let network = null;
 let chosenChar = null;
+let chosenRel = null;
 
 $(document).ready(function() {
     getNetwork();
     $('.network-choose').on('click', function(e) {
         if (!$(this).hasClass('disabled')) {
-            chooseCharacter();
+            $('#network_buttons').removeClass('shown');
+            if ($(this).hasClass('character')) {
+                chooseCharacter();
+            } else {
+                chooseRelation();
+            }
         }
     });
     $('.network-back').on('click', function(e) {
         if (!$(this).hasClass('disabled')) {
+            $('#network_buttons').removeClass('shown');
+            chosenRel = null;
             chosenChar = null;
             network.destroy();
             network = null;
@@ -22,8 +30,20 @@ function chooseCharacter() {
     if (network !== null) {
         let nodes = network.getSelectedNodes();
         if (nodes.length !== 0) {
+            chosenRel = null;
             chosenChar = nodes[0];
             getNetwork(nodes[0]);
+        }
+    }
+}
+
+function chooseRelation() {
+    if (network !== null) {
+        let edges = network.getSelectedEdges();
+        if (edges.length !== 0) {
+            chosenChar = null;
+            chosenRel = edges[0];
+            getRelation(edges[0]);
         }
     }
 }
@@ -33,6 +53,22 @@ function getNetwork(id) {
     if (id !== undefined) {
         url += "?id=" + id;
     }
+    $.ajax({
+        method: "GET",
+        url: url,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            initNetwork(data);
+        }
+    });
+    return null;
+}
+
+function getRelation(id) {
+    if (id === undefined) {
+        return null;
+    }
+    let url = "/characters/network/relation?id=" + id;
     $.ajax({
         method: "GET",
         url: url,
@@ -95,37 +131,51 @@ function initNetwork(data) {
                 selectButtons.addClass('network-button');
             });
             network.on("dragEnd", function (e) {
-                changeChosen(e, buttonContainer, charLabels, relLabels, chooseButtons);
                 selectButtons.removeClass('network-button');
                 selectButtons.addClass('network-button-active');
                 selectButtons.removeClass('disabled');
+                changeChosen(e, buttonContainer, charLabels, relLabels, chooseButtons);
             });
         }
     }
 }
 
-function changeChosen(event, buttonContainer, charButtons, relButtons, chooseButtons) {
+function changeChosen(event, buttonContainer, charLabels, relLabels, chooseButtons) {
     if (event.nodes.length === 0 && event.edges.length === 0) {
         buttonContainer.removeClass('shown');
     } else {
         if (event.nodes.length !== 0) {
-            relButtons.addClass('hidden');
-            charButtons.removeClass('hidden');
-            if (chosenChar !== null) {
-                if (event.nodes[0] === chosenChar) {
-                    chooseButtons.attr('disabled', true);
-                    chooseButtons.removeClass('network-button-active');
-                    chooseButtons.addClass('network-button');
-                } else {
-                    chooseButtons.attr('disabled', false);
-                    chooseButtons.addClass('network-button-active');
-                    chooseButtons.removeClass('network-button');
-                }
-            }
+            chooseButtons.removeClass('relation');
+            chooseButtons.addClass('character');
+            relLabels.addClass('hidden');
+            charLabels.removeClass('hidden');
+            tweakButtons(event, chooseButtons, charLabels, relLabels, event.nodes[0], chosenChar, chosenRel);
         } else {
-            charButtons.addClass('hidden');
-            relButtons.removeClass('hidden');
+            chooseButtons.removeClass('character');
+            chooseButtons.addClass('relation');
+            charLabels.addClass('hidden');
+            relLabels.removeClass('hidden');
+            tweakButtons(event, chooseButtons, charLabels, relLabels, event.edges[0], chosenRel, chosenChar);
         }
         buttonContainer.addClass('shown');
+    }
+}
+
+function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen, unChosen) {
+    if (chosen !== null) {
+        if (elem === chosen) {
+            chooseButtons.attr('disabled', true);
+            chooseButtons.removeClass('network-button-active');
+            chooseButtons.addClass('network-button');
+        } else {
+            chooseButtons.attr('disabled', true);
+            chooseButtons.addClass('network-button-active');
+            chooseButtons.removeClass('network-button');
+        }
+    }
+    if (unChosen !== null) {
+        chooseButtons.attr('disabled', false);
+        chooseButtons.addClass('network-button-active');
+        chooseButtons.removeClass('network-button');
     }
 }
