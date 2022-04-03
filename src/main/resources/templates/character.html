@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="row button-row">
-                <div class="network-button-active network-select">
+                <div class="network-button-active network-select network-delete">
                     <span>Удалить</span>
                 </div>
             </div>
@@ -49,11 +49,28 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="delete_char_modal" tabindex="-1" role="dialog" aria-labelledby="delete_char_modal_label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Редактировать персонажа</h5>
+                <h5 class="modal-title" id="delete_char_modal_label">Удалить персонажа</h5>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить данный элемент? Это действие нельзя откатить.
+            </div>
+            <div class="modal-footer">
+                <button id="delete_modal_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="delete_character" type="button" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="char_modal" tabindex="-1" role="dialog" aria-labelledby="char_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="char_modal_label">Редактировать персонажа</h5>
             </div>
             <div class="modal-body">
                 <form>

@@ -3,6 +3,7 @@ package ru.poezdizm.timelinetracker.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.poezdizm.timelinetracker.model.CharacterModel;
 import ru.poezdizm.timelinetracker.model.NetworkModel;
 import ru.poezdizm.timelinetracker.request.CharacterRequest;
 import ru.poezdizm.timelinetracker.service.NetworkService;
@@ -36,8 +37,14 @@ public class CharacterController {
     }
 
     @PostMapping(value = "/character")
-    public @ResponseBody NetworkModel editCharacter(@RequestBody CharacterRequest request) {
+    public @ResponseBody CharacterModel editCharacter(@RequestBody CharacterRequest request) {
         return networkService.updateCharacter(request);
+    }
+
+    @PostMapping(value = "/character/delete")
+    public @ResponseBody String editCharacter(@RequestParam Integer id) {
+        networkService.deleteCharacter(id);
+        return "delete";
     }
 
 }

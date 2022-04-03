@@ -21,15 +21,28 @@ $(document).ready(function() {
     });
 
     $('.network-edit').on('click', function(e) {
-        $('#myModal').modal('show');
+        $('#char_modal').modal('show');
         setInputsForCharacter(network.body.nodes[network.getSelectedNodes()[0]]);
     });
     $('#character_save').on('click', function(e) {
         saveCharacter();
-        $('#myModal').modal('hide');
+        $('#char_modal').modal('hide');
     });
     $('#modal_close').on('click', function(e) {
-        $('#myModal').modal('hide');
+        $('#char_modal').modal('hide');
+    });
+
+    $('.network-delete').on('click', function(e) {
+        $('#delete_char_modal_label')
+            .text('Удалить персонажа ' + network.body.nodes[network.getSelectedNodes()[0]].options.label);
+        $('#delete_char_modal').modal('show');
+    });
+    $('#delete_character').on('click', function(e) {
+        deleteCharacter(network.getSelectedNodes()[0]);
+        $('#delete_char_modal').modal('hide');
+    });
+    $('#delete_modal_close').on('click', function(e) {
+        $('#delete_char_modal').modal('hide');
     });
 });
 
@@ -247,6 +260,18 @@ function saveCharacter() {
         dataType: "json",
         data: JSON.stringify(character),
         contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            reInitNetwork();
+        }
+    });
+}
+
+function deleteCharacter(id) {
+    let url = "/characters/character/delete?id=" + id;
+    $.ajax({
+        method: "POST",
+        url: url,
+        dataType: "json",
         success : function(data, textStatus, jqXHR) {
             reInitNetwork();
         }

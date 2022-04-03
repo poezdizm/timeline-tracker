@@ -78,7 +78,7 @@ public class NetworkService {
         return new NetworkModel(filteredCharacters, filteredRelations);
     }
 
-    public NetworkModel updateCharacter(CharacterRequest request) {
+    public CharacterModel updateCharacter(CharacterRequest request) {
         Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
         CharacterEntity entity = new CharacterEntity();
         if (optional.isPresent()) entity = optional.get();
@@ -87,7 +87,11 @@ public class NetworkService {
         entity.setIsMain(request.getIsMain());
         entity.setIsDead(request.getIsDead());
         characterRepository.save(entity);
-        return getFullNetwork();
+        return mapCharacter(entity);
+    }
+
+    public void deleteCharacter(Integer id) {
+        characterRepository.deleteById(id);
     }
 
     private static CharacterModel mapCharacter(CharacterEntity entity) {
