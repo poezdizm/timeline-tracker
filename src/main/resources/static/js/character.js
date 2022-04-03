@@ -76,11 +76,11 @@ $(document).ready(function() {
 
     $('.network-delete').on('click', function(e) {
         if (network.getSelectedNodes().length === 0) {
+            $('#delete_rel_modal').modal('show');
+        } else {
             $('#delete_char_modal_label')
                 .text('Удалить персонажа ' + network.body.nodes[network.getSelectedNodes()[0]].options.label);
             $('#delete_char_modal').modal('show');
-        } else {
-            $('#delete_rel_modal').modal('show');
         }
     });
 
@@ -94,7 +94,7 @@ $(document).ready(function() {
 
     $('#delete_rel').on('click', function(e) {
         deleteRelation(network.getSelectedEdges()[0]);
-        $('#delete_char_modal').modal('hide');
+        $('#delete_rel_modal').modal('hide');
     });
     $('#delete_rel_close').on('click', function(e) {
         $('#delete_rel_modal').modal('hide');
@@ -189,7 +189,7 @@ function initNetwork(data) {
                 c.icon = {
                     face: "'FontAwesome'",
                     code: "\uf007",
-                    size: 50,
+                    size: c.size*2,
                     color: "#333333"
                 };
                 delete c.image;
@@ -291,8 +291,8 @@ function clearInputsForCharacter() {
     $('#char_id_input').val("");
     $('#name_input').val("");
     $('#image_input').val("");
-    $('#main_check').attr('checked', false);
-    $('#dead_check').attr('checked', false);
+    $('#main_check').prop('checked', true);
+    $('#dead_check').prop('checked', false);
 }
 
 function setInputsForCharacter(node) {
@@ -305,8 +305,8 @@ function setInputsForCharacter(node) {
     $('#char_id_input').val(node.id);
     $('#name_input').val(name);
     $('#image_input').val(node.options.image);
-    $('#main_check').attr('checked', node.baseSize === 35);
-    $('#dead_check').attr('checked', dead);
+    $('#main_check').prop('checked', node.baseSize === 35);
+    $('#dead_check').prop('checked', dead);
 }
 
 function setInputsForRelation(edge) {
@@ -369,8 +369,8 @@ function saveCharacter() {
     character.id = $('#char_id_input').val();
     character.name = $('#name_input').val();
     character.image = $('#image_input').val();
-    character.isMain = $('#main_check').attr('checked') === 'checked';
-    character.isDead = $('#dead_check').attr('checked') === 'checked';
+    character.isMain = $('#main_check').is(':checked');
+    character.isDead = $('#dead_check').is(':checked');
     $.ajax({
         method: "POST",
         url: "/characters/character",

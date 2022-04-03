@@ -50,9 +50,9 @@ public class CharacterController {
     }
 
     @PostMapping(value = "/character/delete")
-    public @ResponseBody String deleteCharacter(@RequestParam Integer id) {
+    public @ResponseBody CharacterModel deleteCharacter(@RequestParam Integer id) {
         networkService.deleteCharacter(id);
-        return "delete";
+        return CharacterModel.builder().build();
     }
 
 }

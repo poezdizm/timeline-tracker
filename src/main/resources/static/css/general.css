@@ -11,7 +11,6 @@
 }
 
 .navcell {
-    cursor: pointer;
     width: 30%;
     max-width: 20%;
     position: relative;
@@ -26,7 +25,8 @@
     text-align: left !important;
 }
 
-.navcell::before {
+.navbutton::before {
+    cursor: pointer;
     content: '';
     position: absolute;
     top: 0;
@@ -37,11 +37,11 @@
     background-color: rgba(255,255,255,0.1);
     transition: all 0.3s;
 }
-.navcell:hover::before {
+.navbutton:hover::before {
     opacity: 0 ;
     transform: scale(0.5,0.5);
 }
-.navcell::after {
+.navbutton::after {
     content: '';
     position: absolute;
     top: 0;
@@ -53,7 +53,7 @@
     transition: all 0.3s;
     transform: scale(1.2,1.2);
 }
-.navcell:hover::after {
+.navbutton:hover::after {
     opacity: 1;
     transform: scale(1,1);
 }

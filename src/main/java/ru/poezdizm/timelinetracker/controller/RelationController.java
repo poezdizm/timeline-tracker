@@ -34,9 +34,9 @@ public class RelationController {
     }
 
     @PostMapping(value = "/delete")
-    public @ResponseBody String deleteRelation(@RequestParam Long id) {
+    public @ResponseBody RelationModel deleteRelation(@RequestParam Long id) {
         networkService.deleteRelation(id);
-        return "delete";
+        return RelationModel.builder().build();
     }
 
 }

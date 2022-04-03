@@ -27,6 +27,7 @@ public class NetworkService {
     private final CharacterRepository characterRepository;
     private final RelationRepository relationRepository;
     private final RelationTypeRepository relationTypeRepository;
+    private final ValidationService validationService;
 
     private List<RelationEntity> relationCache;
 
@@ -86,6 +87,9 @@ public class NetworkService {
     }
 
     public CharacterModel updateCharacter(CharacterRequest request) {
+        if (!validationService.validateCharacter(request)) {
+            return null;
+        }
         CharacterEntity entity = new CharacterEntity();
         if (request.getId() != null) {
             Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
@@ -108,6 +112,9 @@ public class NetworkService {
     }
 
     public RelationModel updateRelation(RelationRequest request) {
+        if (!validationService.validateRelation(request)) {
+            return null;
+        }
         RelationEntity entity = new RelationEntity();
         if (request.getId() != null) {
             Optional<RelationEntity> optional = relationRepository.findById(request.getId());
@@ -122,6 +129,9 @@ public class NetworkService {
     }
 
     public RelationTypeModel createType(RelationTypeRequest request) {
+        if (!validationService.validateRelationType(request)) {
+            return null;
+        }
         RelationTypeEntity entity = new RelationTypeEntity();
         entity.setLabel(request.getLabel());
         entity.setColor(request.getColor());
