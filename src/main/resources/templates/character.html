@@ -100,5 +100,56 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="rel_modal" tabindex="-1" role="dialog" aria-labelledby="rel_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rel_modal_label">Редактировать связь</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="rel_id_input">
+                    <div class="form-group">
+                        <label for="from_select">Персонаж 1</label>
+                        <select id="from_select" class="form-select">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="to_select">Персонаж 2</label>
+                        <select id="to_select" class="form-select">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="type_select">Тип связи</label>
+                        <select id="type_select" class="form-select">
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="rel_modal_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="rel_save" type="button" class="btn btn-primary modal-network-button network-button-active">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete_rel_modal" tabindex="-1" role="dialog" aria-labelledby="delete_rel_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delete_rel_modal_label">Удалить связь</h5>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить данный элемент? Это действие нельзя откатить.
+            </div>
+            <div class="modal-footer">
+                <button id="delete_rel_modal_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="delete_rel" type="button" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

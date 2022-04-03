@@ -5,8 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.timelinetracker.model.CharacterModel;
 import ru.poezdizm.timelinetracker.model.NetworkModel;
+import ru.poezdizm.timelinetracker.model.RelationTypeModel;
 import ru.poezdizm.timelinetracker.request.CharacterRequest;
 import ru.poezdizm.timelinetracker.service.NetworkService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/characters")
@@ -28,6 +31,11 @@ public class CharacterController {
         return networkService.getFullNetwork();
     }
 
+    @GetMapping(value = "/all")
+    public @ResponseBody List<CharacterModel> getAllCharacters() {
+        return networkService.getAllCharacters();
+    }
+
     @GetMapping(value = "/network/relation")
     public @ResponseBody NetworkModel getRelation(@RequestParam Long id) {
         if (id != null) {
@@ -42,7 +50,7 @@ public class CharacterController {
     }
 
     @PostMapping(value = "/character/delete")
-    public @ResponseBody String editCharacter(@RequestParam Integer id) {
+    public @ResponseBody String deleteCharacter(@RequestParam Integer id) {
         networkService.deleteCharacter(id);
         return "delete";
     }

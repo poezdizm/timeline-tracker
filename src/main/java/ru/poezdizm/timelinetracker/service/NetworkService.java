@@ -1,7 +1,6 @@
 package ru.poezdizm.timelinetracker.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.timelinetracker.entity.CharacterEntity;
 import ru.poezdizm.timelinetracker.entity.RelationEntity;
@@ -9,11 +8,13 @@ import ru.poezdizm.timelinetracker.entity.RelationTypeEntity;
 import ru.poezdizm.timelinetracker.model.CharacterModel;
 import ru.poezdizm.timelinetracker.model.NetworkModel;
 import ru.poezdizm.timelinetracker.model.RelationModel;
+import ru.poezdizm.timelinetracker.model.RelationTypeModel;
 import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
+import ru.poezdizm.timelinetracker.repository.RelationTypeRepository;
 import ru.poezdizm.timelinetracker.request.CharacterRequest;
+import ru.poezdizm.timelinetracker.request.RelationRequest;
 
-import javax.annotation.PostConstruct;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class NetworkService {
 
     private final CharacterRepository characterRepository;
     private final RelationRepository relationRepository;
+    private final RelationTypeRepository relationTypeRepository;
 
     private List<RelationEntity> relationCache;
 
@@ -78,6 +80,10 @@ public class NetworkService {
         return new NetworkModel(filteredCharacters, filteredRelations);
     }
 
+    public List<CharacterModel> getAllCharacters() {
+        return characterRepository.findAll().stream().map(NetworkService::mapCharacter).toList();
+    }
+
     public CharacterModel updateCharacter(CharacterRequest request) {
         Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
         CharacterEntity entity = new CharacterEntity();
@@ -94,6 +100,26 @@ public class NetworkService {
         characterRepository.deleteById(id);
     }
 
+    public List<RelationTypeModel> getAllTypes() {
+        return relationTypeRepository.findAll().stream().map(NetworkService::mapRelationType).toList();
+    }
+
+    public RelationModel updateRelation(RelationRequest request) {
+        Optional<RelationEntity> optional = relationRepository.findById(request.getId());
+        RelationEntity entity = new RelationEntity();
+        if (optional.isPresent()) entity = optional.get();
+        entity.setFrom(request.getFrom());
+        entity.setTo(request.getTo());
+        entity.setType(request.getType() != null ?
+                relationTypeRepository.findById(request.getType()).orElse(null) : null);
+        relationRepository.save(entity);
+        return mapRelation(entity);
+    }
+
+    public void deleteRelation(Long id) {
+        relationRepository.deleteById(id);
+    }
+
     private static CharacterModel mapCharacter(CharacterEntity entity) {
         return CharacterModel.builder().id(entity.getId())
                 .label(entity.getIsDead() ? entity.getName() + "\uD83D\uDC80" : entity.getName())
@@ -108,6 +134,10 @@ public class NetworkService {
         }
         return RelationModel.builder().id(entity.getId()).from(entity.getFrom()).to(entity.getTo())
                 .label(entity.getType().getLabel()).color(entity.getType().getColor()).build();
+    }
+
+    private static RelationTypeModel mapRelationType(RelationTypeEntity entity) {
+        return RelationTypeModel.builder().id(entity.getId()).label(entity.getLabel()).build();
     }
 
 }

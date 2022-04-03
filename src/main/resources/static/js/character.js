@@ -21,9 +21,15 @@ $(document).ready(function() {
     });
 
     $('.network-edit').on('click', function(e) {
-        $('#char_modal').modal('show');
-        setInputsForCharacter(network.body.nodes[network.getSelectedNodes()[0]]);
+        if (network.getSelectedNodes().length === 0) {
+            $('#rel_modal').modal('show');
+            setInputsForRelation(network.body.edges[network.getSelectedEdges()[0]]);
+        } else {
+            $('#char_modal').modal('show');
+            setInputsForCharacter(network.body.nodes[network.getSelectedNodes()[0]]);
+        }
     });
+
     $('#character_save').on('click', function(e) {
         saveCharacter();
         $('#char_modal').modal('hide');
@@ -32,17 +38,38 @@ $(document).ready(function() {
         $('#char_modal').modal('hide');
     });
 
-    $('.network-delete').on('click', function(e) {
-        $('#delete_char_modal_label')
-            .text('Удалить персонажа ' + network.body.nodes[network.getSelectedNodes()[0]].options.label);
-        $('#delete_char_modal').modal('show');
+    $('#rel_save').on('click', function(e) {
+        saveRelation();
+        $('#rel_modal').modal('hide');
     });
+    $('#rel_modal_close').on('click', function(e) {
+        $('#rel_modal').modal('hide');
+    });
+
+    $('.network-delete').on('click', function(e) {
+        if (network.getSelectedNodes().length === 0) {
+            $('#delete_char_modal_label')
+                .text('Удалить персонажа ' + network.body.nodes[network.getSelectedNodes()[0]].options.label);
+            $('#delete_char_modal').modal('show');
+        } else {
+            $('#delete_rel_modal').modal('show');
+        }
+    });
+
     $('#delete_character').on('click', function(e) {
         deleteCharacter(network.getSelectedNodes()[0]);
         $('#delete_char_modal').modal('hide');
     });
     $('#delete_modal_close').on('click', function(e) {
         $('#delete_char_modal').modal('hide');
+    });
+
+    $('#delete_rel').on('click', function(e) {
+        deleteRelation(network.getSelectedEdges()[0]);
+        $('#delete_char_modal').modal('hide');
+    });
+    $('#delete_rel_close').on('click', function(e) {
+        $('#delete_rel_modal').modal('hide');
     });
 });
 
@@ -233,7 +260,6 @@ function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen)
 }
 
 function setInputsForCharacter(node) {
-    console.log(node);
     let name = node.options.label;
     let dead = false;
     if (name.includes('\uD83D\uDC80')) {
@@ -245,6 +271,58 @@ function setInputsForCharacter(node) {
     $('#image_input').val(node.options.image);
     $('#main_check').attr('checked', node.baseSize === 35);
     $('#dead_check').attr('checked', dead);
+}
+
+function setInputsForRelation(edge) {
+    $('#rel_id_input').val(edge.id);
+
+    let characters = [];
+    $.ajax({
+        method: "GET",
+        url: "/characters/all",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            characters = data;
+        }
+    });
+    $('#from_select').empty();
+    $('#to_select').empty();
+    $('#type_select').empty().append($('<option>', {
+        value: '',
+        text: 'Не указано',
+        selected: true
+    }));
+    characters.forEach(c => {
+        $('#from_select').append($('<option>', {
+            value: c.id,
+            text: c.label,
+            selected: edge.fromId === c.id
+        }));
+        $('#to_select').append($('<option>', {
+            value: c.id,
+            text: c.label,
+            selected: edge.toId === c.id
+        }));
+    });
+
+    let types = [];
+    $.ajax({
+        method: "GET",
+        url: "/relations/types",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            types = data;
+        }
+    });
+    types.forEach(c => {
+        $('#type_select').append($('<option>', {
+            value: c.id,
+            text: c.label,
+            selected: edge.options.label === c.label
+        }));
+    });
 }
 
 function saveCharacter() {
@@ -266,8 +344,38 @@ function saveCharacter() {
     });
 }
 
+function saveRelation() {
+    let relation = {};
+    relation.id = $('#rel_id_input').val();
+    relation.from = $( "#from_select option:selected" ).val();
+    relation.to = $( "#to_select option:selected" ).val();
+    relation.type = $( "#type_select option:selected" ).val();
+    $.ajax({
+        method: "POST",
+        url: "/relations",
+        dataType: "json",
+        data: JSON.stringify(relation),
+        contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            reInitNetwork();
+        }
+    });
+}
+
 function deleteCharacter(id) {
     let url = "/characters/character/delete?id=" + id;
+    $.ajax({
+        method: "POST",
+        url: url,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            reInitNetwork();
+        }
+    });
+}
+
+function deleteRelation(id) {
+    let url = "/relations/delete?id=" + id;
     $.ajax({
         method: "POST",
         url: url,
