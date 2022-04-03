@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="row button-row">
-                <div class="network-button-active network-select">
+                <div class="network-button-active network-select network-edit">
                     <span>Редактировать</span>
                 </div>
             </div>
@@ -46,6 +46,41 @@
             </div>
         </div>
         <div id="char_network"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Редактировать персонажа</h5>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="char_id_input">
+                    <div class="form-group">
+                        <label for="name_input">Имя</label>
+                        <input type="text" class="form-control" id="name_input" aria-describedby="emailHelp" placeholder="Имя персонажа">
+                    </div>
+                    <div class="form-group">
+                        <label for="image_input">Ссылка на картинку</label>
+                        <input type="text" class="form-control" id="image_input" placeholder="Ссылка">
+                    </div>
+                    <div class="custom-control custom-checkbox form-control">
+                        <input type="checkbox" class="custom-control-input" id="main_check">
+                        <label class="custom-control-label" for="main_check">Первостепенный персонаж</label>
+                    </div>
+                    <div class="custom-control custom-checkbox form-control">
+                        <input type="checkbox" class="custom-control-input" id="dead_check">
+                        <label class="custom-control-label" for="dead_check">Мертв</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="modal_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="character_save" type="button" class="btn btn-primary modal-network-button network-button-active">Сохранить</button>
+            </div>
+        </div>
     </div>
 </div>
 </body>

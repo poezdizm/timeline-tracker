@@ -16,15 +16,31 @@ $(document).ready(function() {
     });
     $('.network-back').on('click', function(e) {
         if (!$(this).hasClass('disabled')) {
-            $('#network_buttons').removeClass('shown');
-            chosenRel = null;
-            chosenChar = null;
-            network.destroy();
-            network = null;
-            getNetwork();
+            reInitNetwork();
         }
     });
+
+    $('.network-edit').on('click', function(e) {
+        $('#myModal').modal('show');
+        setInputsForCharacter(network.body.nodes[network.getSelectedNodes()[0]]);
+    });
+    $('#character_save').on('click', function(e) {
+        saveCharacter();
+        $('#myModal').modal('hide');
+    });
+    $('#modal_close').on('click', function(e) {
+        $('#myModal').modal('hide');
+    });
 });
+
+function reInitNetwork() {
+    $('#network_buttons').removeClass('shown');
+    chosenRel = null;
+    chosenChar = null;
+    network.destroy();
+    network = null;
+    getNetwork();
+}
 
 function chooseCharacter() {
     if (network !== null) {
@@ -201,4 +217,38 @@ function tweakButtons(event, chooseButtons, charLabels, relLabels, elem, chosen)
         chooseButtons.addClass('network-button-active');
         chooseButtons.removeClass('network-button');
     }
+}
+
+function setInputsForCharacter(node) {
+    console.log(node);
+    let name = node.options.label;
+    let dead = false;
+    if (name.includes('\uD83D\uDC80')) {
+        name = name.replace('\uD83D\uDC80', '');
+        dead = true;
+    }
+    $('#char_id_input').val(node.id);
+    $('#name_input').val(name);
+    $('#image_input').val(node.options.image);
+    $('#main_check').attr('checked', node.baseSize === 35);
+    $('#dead_check').attr('checked', dead);
+}
+
+function saveCharacter() {
+    let character = {};
+    character.id = $('#char_id_input').val();
+    character.name = $('#name_input').val();
+    character.image = $('#image_input').val();
+    character.isMain = $('#main_check').attr('checked') === 'checked';
+    character.isDead = $('#dead_check').attr('checked') === 'checked';
+    $.ajax({
+        method: "POST",
+        url: "/characters/character",
+        dataType: "json",
+        data: JSON.stringify(character),
+        contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            reInitNetwork();
+        }
+    });
 }

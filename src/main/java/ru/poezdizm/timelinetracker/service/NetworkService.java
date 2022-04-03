@@ -11,6 +11,7 @@ import ru.poezdizm.timelinetracker.model.NetworkModel;
 import ru.poezdizm.timelinetracker.model.RelationModel;
 import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
+import ru.poezdizm.timelinetracker.request.CharacterRequest;
 
 import javax.annotation.PostConstruct;
 import java.util.LinkedList;
@@ -75,6 +76,18 @@ public class NetworkService {
         filteredCharacters.add(mapCharacter(characterFrom.get()));
         filteredCharacters.add(mapCharacter(characterTo.get()));
         return new NetworkModel(filteredCharacters, filteredRelations);
+    }
+
+    public NetworkModel updateCharacter(CharacterRequest request) {
+        Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
+        CharacterEntity entity = new CharacterEntity();
+        if (optional.isPresent()) entity = optional.get();
+        entity.setName(request.getName());
+        entity.setImageUrl(request.getImage());
+        entity.setIsMain(request.getIsMain());
+        entity.setIsDead(request.getIsDead());
+        characterRepository.save(entity);
+        return getFullNetwork();
     }
 
     private static CharacterModel mapCharacter(CharacterEntity entity) {

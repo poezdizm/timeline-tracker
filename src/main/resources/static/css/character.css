@@ -51,6 +51,23 @@
     text-align: center;
 }
 
+.modal-network-button {
+    border: 0;
+    box-shadow: none !important;
+    color: black !important;
+    background-color: goldenrod !important;
+    line-height: 30px !important;
+    font-size: large !important;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.custom-checkbox {
+    margin-bottom: 10px;
+}
+
 .network-button-active {
     font-family: 'Verdana', serif;
     z-index: 10;
