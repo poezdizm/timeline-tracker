@@ -12,6 +12,14 @@
     position: relative;
 }
 
+.opt-button-container {
+    width: 5%;
+    margin-left: 3%;
+    margin-top: 3%;
+    float: left;
+    position: relative;
+}
+
 .expandable {
     overflow: hidden;
     transition: all .5s ease-in-out;

@@ -19,3 +19,13 @@
 .hidden {
     display: none;
 }
+
+.empty-label {
+    text-align: center;
+    font-family: 'Verdana', serif;
+    line-height: 50px;
+    position: absolute;
+    margin-top: 20%;
+    width: 100%;
+    color: gray;
+}
