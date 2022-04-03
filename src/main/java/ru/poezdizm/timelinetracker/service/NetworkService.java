@@ -1,15 +1,18 @@
 package ru.poezdizm.timelinetracker.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.timelinetracker.entity.CharacterEntity;
 import ru.poezdizm.timelinetracker.entity.RelationEntity;
+import ru.poezdizm.timelinetracker.entity.RelationTypeEntity;
 import ru.poezdizm.timelinetracker.model.CharacterModel;
 import ru.poezdizm.timelinetracker.model.NetworkModel;
 import ru.poezdizm.timelinetracker.model.RelationModel;
 import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
 
+import javax.annotation.PostConstruct;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,8 @@ public class NetworkService {
     private final RelationRepository relationRepository;
 
     private List<RelationEntity> relationCache;
+
+    private static String defaultColor = "#000000";
 
     public NetworkModel getFullNetwork() {
         List<CharacterModel> characterModels = characterRepository.findAll().stream()
@@ -54,11 +59,15 @@ public class NetworkService {
     }
 
     private static CharacterModel mapCharacter(CharacterEntity entity) {
-        return CharacterModel.builder().id(entity.getId()).name(entity.getName()).imageUrl(entity.getImageUrl()).build();
+        return CharacterModel.builder().id(entity.getId()).label(entity.getName()).image(entity.getImageUrl()).build();
     }
 
     private static RelationModel mapRelation(RelationEntity entity) {
-        return RelationModel.builder().from(entity.getFrom()).to(entity.getTo()).build();
+        if (entity.getType() == null) {
+            entity.setType(new RelationTypeEntity(0, "", defaultColor));
+        }
+        return RelationModel.builder().from(entity.getFrom()).to(entity.getTo())
+                .label(entity.getType().getLabel()).color(entity.getType().getColor()).build();
     }
 
 }

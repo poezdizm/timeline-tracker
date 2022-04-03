@@ -11,8 +11,8 @@ public class CharacterModel {
 
     private Integer id;
 
-    private String name;
+    private String label;
 
-    private String imageUrl;
+    private String image;
 
 }

@@ -1,39 +1,33 @@
 package ru.poezdizm.timelinetracker.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "character_relations")
+@Table(name = "relation_types")
 @Getter
 @Setter
+@AllArgsConstructor
 @RequiredArgsConstructor
-public class RelationEntity {
+public class RelationTypeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "from_char")
-    private Integer from;
+    private String label;
 
-    @Column(name = "to_char")
-    private Integer to;
-
-    @ManyToOne
-    private RelationTypeEntity type;
+    private String color;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        RelationEntity relation = (RelationEntity) o;
-        return id != null && Objects.equals(id, relation.id);
+        RelationTypeEntity type = (RelationTypeEntity) o;
+        return id != null && Objects.equals(id, type.id);
     }
 
     @Override

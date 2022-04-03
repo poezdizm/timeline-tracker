@@ -13,4 +13,8 @@ public class RelationModel {
 
     private Integer to;
 
+    private String label;
+
+    private String color;
+
 }

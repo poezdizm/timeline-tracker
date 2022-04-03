@@ -15,15 +15,22 @@
 <div class="container-fluid full">
     <div class="container-fluid bar"></div>
     <div class="container-fluid main">
-        <div id="network_buttons" class="container button-container">
+        <div id="network_buttons" class="container button-container expandable">
             <div class="row button-row">
-                <div class="network-button"></div>
+                <div class="network-button-active network-select network-choose">
+                    <span class="hidden character-label">Выбрать персонажа</span>
+                    <span class="hidden relation-label">Выбрать связь</span>
+                </div>
             </div>
             <div class="row button-row">
-                <div class="network-button"></div>
+                <div class="network-button-active network-select">
+                    <span>Редактировать</span>
+                </div>
             </div>
             <div class="row button-row">
-                <div class="network-button"></div>
+                <div class="network-button-active network-select">
+                    <span>Удалить</span>
+                </div>
             </div>
         </div>
         <div id="char_network"></div>
