@@ -50,6 +50,11 @@ $(document).ready(function() {
         $('#type_modal').modal('show');
     });
 
+    $('#rel_type_edit').on('click', function(e) {
+        setInputsForRelationType(network.body.edges[network.getSelectedEdges()[0]]);
+        $('#type_modal').modal('show');
+    });
+
     $('#character_save').on('click', function(e) {
         saveCharacter();
         $('#char_modal').modal('hide');
@@ -200,6 +205,9 @@ function initNetwork(data) {
         data.relationModels.forEach(c => {
             c.font = {align: "top"};
             c.length = 200;
+            if (c.hasPointer) {
+                c.arrows = "to";
+            }
         });
 
         var nodes = new vis.DataSet(data.characterModels);
@@ -259,10 +267,20 @@ function changeChosen(event, buttonContainer, charLabels, relLabels, chooseButto
             charLabels.removeClass('hidden');
             tweakButtons(event, chooseButtons, charLabels, relLabels, event.nodes[0], chosenChar);
         } else {
+            let relTypeEditButton = $('#rel_type_edit');
             chooseButtons.removeClass('character');
             chooseButtons.addClass('relation');
             charLabels.addClass('hidden');
             relLabels.removeClass('hidden');
+            if (network.body.edges[event.edges[0]].options.label === undefined) {
+                relTypeEditButton.attr('disabled', true);
+                relTypeEditButton.removeClass('network-button-active');
+                relTypeEditButton.addClass('network-button');
+            } else {
+                relTypeEditButton.attr('disabled', false);
+                relTypeEditButton.removeClass('network-button');
+                relTypeEditButton.addClass('network-button-active');
+            }
             tweakButtons(event, chooseButtons, charLabels, relLabels, event.edges[0], chosenRel);
         }
         buttonContainer.addClass('shown');
@@ -364,6 +382,24 @@ function setInputsForRelation(edge) {
     });
 }
 
+function setInputsForRelationType(edge) {
+    let relationType = {};
+    $.ajax({
+        method: "GET",
+        url: "/relations/type?relationId="+edge.id,
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            relationType = data;
+        }
+    });
+    $('#type_id_input').val(relationType.id);
+    $('#type_label_input').val(relationType.label);
+    colorPicker.setColor(relationType.color);
+    $('#pointer_check').prop('checked', relationType.hasPointer);
+    $('#dashes_check').prop('checked', relationType.dashes);
+}
+
 function saveCharacter() {
     let character = {};
     character.id = $('#char_id_input').val();
@@ -426,18 +462,29 @@ function deleteRelation(id) {
 }
 
 function clearInputsForTypes() {
+    $('#type_id_input').val("");
     $('#type_label_input').val("");
+    $('#pointer_check').prop('checked', false);
+    $('#dashes_check').prop('checked', false);
 }
 
 function saveType() {
     let type = {};
+    type.id= $('#type_id_input').val();
     type.label = $("#type_label_input").val();
     type.color = $(".color-input").val();
+    type.hasPointer = $('#pointer_check').is(':checked');
+    type.dashes = $('#dashes_check').is(':checked');
     $.ajax({
         method: "POST",
         url: "/relations/types",
         dataType: "json",
         data: JSON.stringify(type),
-        contentType: "application/json; charset=utf-8"
+        contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            if (type.id !== "") {
+                reInitNetwork();
+            }
+        }
     });
 }

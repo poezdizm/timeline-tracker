@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.poezdizm.timelinetracker.entity.CharacterEntity;
 import ru.poezdizm.timelinetracker.entity.RelationEntity;
 import ru.poezdizm.timelinetracker.entity.RelationTypeEntity;
-import ru.poezdizm.timelinetracker.model.CharacterModel;
-import ru.poezdizm.timelinetracker.model.NetworkModel;
-import ru.poezdizm.timelinetracker.model.RelationModel;
-import ru.poezdizm.timelinetracker.model.RelationTypeModel;
+import ru.poezdizm.timelinetracker.model.*;
 import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
 import ru.poezdizm.timelinetracker.repository.RelationTypeRepository;
@@ -111,6 +108,14 @@ public class NetworkService {
         return relationTypeRepository.findAll().stream().map(NetworkService::mapRelationType).toList();
     }
 
+    public RelationTypeFullModel getTypeByRelationId(Long relationId) {
+        Optional<RelationEntity> relation = relationRepository.findById(relationId);
+        if (relation.isEmpty()) return null;
+        Optional<RelationTypeEntity> type = relationTypeRepository.findById(relation.get().getType().getId());
+        if (type.isEmpty()) return null;
+        return mapFullRelationType(type.get());
+    }
+
     public RelationModel updateRelation(RelationRequest request) {
         if (!validationService.validateRelation(request)) {
             return null;
@@ -128,13 +133,19 @@ public class NetworkService {
         return mapRelation(entity);
     }
 
-    public RelationTypeModel createType(RelationTypeRequest request) {
+    public RelationTypeModel editType(RelationTypeRequest request) {
         if (!validationService.validateRelationType(request)) {
             return null;
         }
         RelationTypeEntity entity = new RelationTypeEntity();
+        if (request.getId() != null) {
+            Optional<RelationTypeEntity> optional = relationTypeRepository.findById(request.getId());
+            if (optional.isPresent()) entity = optional.get();
+        }
         entity.setLabel(request.getLabel());
         entity.setColor(request.getColor());
+        entity.setHasPointer(request.getHasPointer());
+        entity.setDashes(request.getDashes());
         relationTypeRepository.save(entity);
         return mapRelationType(entity);
     }
@@ -153,14 +164,20 @@ public class NetworkService {
 
     private static RelationModel mapRelation(RelationEntity entity) {
         if (entity.getType() == null) {
-            entity.setType(new RelationTypeEntity(0, "", defaultColor));
+            entity.setType(new RelationTypeEntity(0, "", defaultColor, false, false));
         }
         return RelationModel.builder().id(entity.getId()).from(entity.getFrom()).to(entity.getTo())
-                .label(entity.getType().getLabel()).color(entity.getType().getColor()).build();
+                .label(entity.getType().getLabel()).color(entity.getType().getColor())
+                .hasPointer(entity.getType().getHasPointer()).dashes(entity.getType().getDashes()).build();
     }
 
     private static RelationTypeModel mapRelationType(RelationTypeEntity entity) {
         return RelationTypeModel.builder().id(entity.getId()).label(entity.getLabel()).build();
+    }
+
+    private static RelationTypeFullModel mapFullRelationType(RelationTypeEntity entity) {
+        return RelationTypeFullModel.builder().id(entity.getId()).label(entity.getLabel())
+                .color(entity.getColor()).hasPointer(entity.getHasPointer()).dashes(entity.getDashes()).build();
     }
 
 }

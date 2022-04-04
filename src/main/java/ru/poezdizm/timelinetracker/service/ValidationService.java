@@ -35,7 +35,7 @@ public class ValidationService {
         if (request.getFrom().equals(request.getTo())) {
             return false;
         }
-        return !relationRepository.findAll().stream()
+        return request.getId() != null || !relationRepository.findAll().stream()
                 .anyMatch(e -> (e.getFrom().equals(request.getFrom()) && e.getTo().equals(request.getTo())) ||
                         (e.getFrom().equals(request.getTo()) && e.getTo().equals(request.getFrom())));
     }

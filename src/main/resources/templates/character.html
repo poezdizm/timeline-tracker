@@ -51,6 +51,11 @@
                     <span>Редактировать</span>
                 </div>
             </div>
+            <div class="row button-row hidden relation-label">
+                <div id="rel_type_edit" class="network-button-active network-select">
+                    <span>Редактировать тип</span>
+                </div>
+            </div>
             <div class="row button-row">
                 <div class="network-button-active network-select network-delete">
                     <span>Удалить</span>
@@ -172,9 +177,18 @@
             </div>
             <div class="modal-body">
                 <form>
+                    <input type="hidden" id="type_id_input">
                     <div class="form-group">
                         <label for="type_label_input">Название</label>
                         <input type="text" class="form-control" id="type_label_input" placeholder="Название связи">
+                    </div>
+                    <div class="custom-control custom-checkbox form-control">
+                        <input type="checkbox" class="custom-control-input" id="pointer_check">
+                        <label class="custom-control-label" for="pointer_check">Со стрелкой</label>
+                    </div>
+                    <div class="custom-control custom-checkbox form-control">
+                        <input type="checkbox" class="custom-control-input" id="dashes_check">
+                        <label class="custom-control-label" for="dashes_check">Пунктирная</label>
                     </div>
                     <div class="form-group">
                         <label for="image_input">Цвет</label>

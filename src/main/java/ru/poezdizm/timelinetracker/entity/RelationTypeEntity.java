@@ -22,6 +22,11 @@ public class RelationTypeEntity {
 
     private String color;
 
+    @Column(name = "pointer")
+    private Boolean hasPointer;
+
+    private Boolean dashes;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -9,8 +9,14 @@ import lombok.Setter;
 @Builder
 public class RelationTypeRequest {
 
+    private Integer id;
+
     private String label;
 
     private String color;
+
+    private Boolean hasPointer;
+
+    private Boolean dashes;
 
 }

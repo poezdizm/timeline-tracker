@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.timelinetracker.model.RelationModel;
+import ru.poezdizm.timelinetracker.model.RelationTypeFullModel;
 import ru.poezdizm.timelinetracker.model.RelationTypeModel;
 import ru.poezdizm.timelinetracker.request.RelationRequest;
 import ru.poezdizm.timelinetracker.request.RelationTypeRequest;
@@ -23,14 +24,19 @@ public class RelationController {
         return networkService.getAllTypes();
     }
 
+    @GetMapping(value = "/type")
+    public @ResponseBody RelationTypeFullModel getTypeByRelationId(@RequestParam Long relationId) {
+        return networkService.getTypeByRelationId(relationId);
+    }
+
     @PostMapping
     public @ResponseBody RelationModel editRelation(@RequestBody RelationRequest request) {
         return networkService.updateRelation(request);
     }
 
     @PostMapping(value = "/types")
-    public @ResponseBody RelationTypeModel createType(@RequestBody RelationTypeRequest request) {
-        return networkService.createType(request);
+    public @ResponseBody RelationTypeModel editType(@RequestBody RelationTypeRequest request) {
+        return networkService.editType(request);
     }
 
     @PostMapping(value = "/delete")
