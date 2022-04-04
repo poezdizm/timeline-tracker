@@ -43,7 +43,7 @@ public class ValidationService {
     public Boolean validateRelationType(RelationTypeRequest request) {
         return request.getLabel().trim().matches("[a-zA-Zа-яА-Я0-9 ]+") &&
                 request.getLabel() != null && !request.getLabel().trim().isEmpty() &&
-                !request.getColor().matches("#[A-F0-9]{6}");
+                request.getColor().matches("#[A-F0-9]{6}");
     }
 
 }
