@@ -35,13 +35,18 @@ public class ValidationService {
         if (request.getFrom().equals(request.getTo())) {
             return false;
         }
+        if (request.getLength() == null) {
+            request.setLength(200);
+        } else if (request.getLength() < 100 || request.getLength() > 500) {
+            return false;
+        }
         return request.getId() != null || !relationRepository.findAll().stream()
                 .anyMatch(e -> (e.getFrom().equals(request.getFrom()) && e.getTo().equals(request.getTo())) ||
                         (e.getFrom().equals(request.getTo()) && e.getTo().equals(request.getFrom())));
     }
 
     public Boolean validateRelationType(RelationTypeRequest request) {
-        return request.getLabel().trim().matches("[a-zA-Zа-яА-Я0-9 ]+") &&
+        return request.getLabel().trim().matches("[\"a-zA-Zа-яА-Я0-9 -]+") &&
                 request.getLabel() != null && !request.getLabel().trim().isEmpty() &&
                 request.getColor().matches("#[A-F0-9]{6}");
     }

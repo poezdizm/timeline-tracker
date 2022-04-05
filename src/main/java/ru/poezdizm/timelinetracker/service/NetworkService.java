@@ -129,6 +129,7 @@ public class NetworkService {
         entity.setTo(request.getTo());
         entity.setType(request.getType() != null ?
                 relationTypeRepository.findById(request.getType()).orElse(null) : null);
+        entity.setLength(request.getLength());
         relationRepository.save(entity);
         return mapRelation(entity);
     }
@@ -168,7 +169,8 @@ public class NetworkService {
         }
         return RelationModel.builder().id(entity.getId()).from(entity.getFrom()).to(entity.getTo())
                 .label(entity.getType().getLabel()).color(entity.getType().getColor())
-                .hasPointer(entity.getType().getHasPointer()).dashes(entity.getType().getDashes()).build();
+                .hasPointer(entity.getType().getHasPointer()).dashes(entity.getType().getDashes())
+                .length(entity.getLength()).build();
     }
 
     private static RelationTypeModel mapRelationType(RelationTypeEntity entity) {

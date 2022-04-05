@@ -35,33 +35,47 @@
         <div id="opt_buttons" class="container opt-button-container expandable">
             <div class="row button-row">
                 <div class="network-button-active network-select network-back">
-                    <span>Назад</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                    </svg>
                 </div>
             </div>
         </div>
         <div id="network_buttons" class="container button-container expandable">
-            <div class="row button-row">
+            <div class="row button-row non-group-button">
                 <div class="network-button-active network-select network-choose">
                     <span class="hidden character-label">Выбрать персонажа</span>
                     <span class="hidden relation-label">Выбрать связь</span>
                 </div>
             </div>
-            <div class="row button-row">
+            <div class="row button-row non-group-button">
                 <div class="network-button-active network-select network-edit">
                     <span>Редактировать</span>
                 </div>
             </div>
-            <div class="row button-row hidden relation-label">
+            <div class="row button-row hidden character-label non-group-button">
+                <div id="group" class="network-button-active network-select">
+                    <span>Сгруппировать</span>
+                </div>
+            </div>
+            <div class="row button-row hidden character-label group-button">
+                <div id="ungroup" class="network-button-active network-select">
+                    <span>Разгруппировать</span>
+                </div>
+            </div>
+            <div class="row button-row hidden relation-label non-group-button">
                 <div id="rel_type_edit" class="network-button-active network-select">
                     <span>Редактировать тип</span>
                 </div>
             </div>
-            <div class="row button-row">
+            <div class="row button-row non-group-button">
                 <div class="network-button-active network-select network-delete">
                     <span>Удалить</span>
                 </div>
             </div>
         </div>
+
         <div id="char_network"></div>
     </div>
 </div>
@@ -141,6 +155,10 @@
                         <label for="type_select">Тип связи</label>
                         <select id="type_select" class="form-select">
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="length_input">Длина линии</label>
+                        <input type="number" min="100" max="500" class="form-control" id="length_input" placeholder="от 100 до 500">
                     </div>
                 </form>
             </div>

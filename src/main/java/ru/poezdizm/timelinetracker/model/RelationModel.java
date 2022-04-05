@@ -24,4 +24,6 @@ public class RelationModel {
 
     private Boolean dashes;
 
+    private Integer length;
+
 }

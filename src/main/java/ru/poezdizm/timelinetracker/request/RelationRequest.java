@@ -17,4 +17,5 @@ public class RelationRequest {
 
     private Integer type;
 
+    private Integer length;
 }

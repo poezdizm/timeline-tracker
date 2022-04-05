@@ -28,6 +28,8 @@ public class RelationEntity {
     @ManyToOne
     private RelationTypeEntity type;
 
+    private Integer length;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

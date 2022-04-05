@@ -104,6 +104,36 @@ $(document).ready(function() {
     $('#delete_rel_close').on('click', function(e) {
         $('#delete_rel_modal').modal('hide');
     });
+
+    $('#group').on('click', function(e) {
+        let node = network.getSelectedNodes()[0];
+        let options = {
+            clusterNodeProperties: {
+                label: network.body.nodes[node].options.label,
+                shape: 'box',
+                size: network.body.nodes[node].options.size,
+                color: {
+                    border: '#888888',
+                    background: '#AAAAAA'
+                },
+                shadow : {
+                    enabled: true,
+                    color: 'rgba(0,0,0,0.5)',
+                    size:5,
+                    x:3,
+                    y:5
+                }
+            }
+        }
+        network.clusterByConnection(node, options);
+        network.unselectAll();
+        $('#network_buttons').removeClass('shown');
+    });
+
+    $('#ungroup').on('click', function(e) {
+        network.openCluster(network.getSelectedNodes()[0]);
+        $('#network_buttons').removeClass('shown');
+    });
 });
 
 function reInitNetwork() {
@@ -182,6 +212,7 @@ function initNetwork(data) {
     } else {
         data.characterModels.forEach(c => {
             c.color =  {border: '#000000'};
+            c.font = {size: 16, strokeWidth: 3, strokeColor: "#ffffff"};
             c.shadow = {
                 enabled: true,
                 color: 'rgba(0,0,0,0.5)',
@@ -202,11 +233,11 @@ function initNetwork(data) {
                 c.shape = "circularImage"
             }
         });
-        data.relationModels.forEach(c => {
-            c.font = {align: "top"};
-            c.length = 200;
-            if (c.hasPointer) {
-                c.arrows = "to";
+        data.relationModels.forEach(r => {
+            r.font = {align: "top", strokeWidth: 0};
+            r.width = 2;
+            if (r.hasPointer) {
+                r.arrows = "to";
             }
         });
 
@@ -259,7 +290,14 @@ function initNetwork(data) {
 function changeChosen(event, buttonContainer, charLabels, relLabels, chooseButtons) {
     if (event.nodes.length === 0 && event.edges.length === 0) {
         buttonContainer.removeClass('shown');
+    } else if (event.nodes.length !== 0 && network.isCluster(event.nodes[0])) {
+        $('.group-button').removeClass('hidden');
+        $('.non-group-button').addClass('hidden');
+        buttonContainer.addClass('shown');
+    } else if (event.edges.length !== 0 && isNaN(event.edges[0])) {
+        buttonContainer.removeClass('shown');
     } else {
+        $('.non-group-button').removeClass('hidden');
         if (event.nodes.length !== 0) {
             chooseButtons.removeClass('relation');
             chooseButtons.addClass('character');
@@ -283,6 +321,7 @@ function changeChosen(event, buttonContainer, charLabels, relLabels, chooseButto
             }
             tweakButtons(event, chooseButtons, charLabels, relLabels, event.edges[0], chosenRel);
         }
+        $('.group-button').addClass('hidden');
         buttonContainer.addClass('shown');
     }
 }
@@ -329,7 +368,7 @@ function setInputsForCharacter(node) {
 
 function setInputsForRelation(edge) {
     if (edge === undefined) {
-        edge = {id: "", options: {label:""}, fromId: "", toId: ""};
+        edge = {id: "", options: {label:""}, fromId: "", toId: "", length: 200};
     }
     $('#rel_id_input').val(edge.id);
 
@@ -380,6 +419,8 @@ function setInputsForRelation(edge) {
             selected: edge.options.label === t.label
         }));
     });
+
+    $("#length_input").val(edge.options.length);
 }
 
 function setInputsForRelationType(edge) {
@@ -425,6 +466,7 @@ function saveRelation() {
     relation.from = $( "#from_select option:selected" ).val();
     relation.to = $( "#to_select option:selected" ).val();
     relation.type = $( "#type_select option:selected" ).val();
+    relation.length = $("#length_input").val();
     $.ajax({
         method: "POST",
         url: "/relations",

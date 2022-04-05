@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.poezdizm</groupId>
 	<artifactId>timeline-tracker</artifactId>
-	<version>1.1</version>
+	<version>1.2</version>
 	<name>timeline-tracker</name>
 	<description>Timeline and character tracker for any plot</description>
 	<properties>
@@ -52,6 +52,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>timeline-tracker</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
