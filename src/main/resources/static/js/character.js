@@ -108,6 +108,9 @@ $(document).ready(function() {
     $('#group').on('click', function(e) {
         let node = network.getSelectedNodes()[0];
         let options = {
+            joinCondition: function(parentNodeOptions, childNodeOptions) {
+                return childNodeOptions.size === 25;
+            },
             clusterNodeProperties: {
                 label: network.body.nodes[node].options.label,
                 shape: 'box',
