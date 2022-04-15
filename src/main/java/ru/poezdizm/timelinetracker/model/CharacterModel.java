@@ -2,7 +2,6 @@ package ru.poezdizm.timelinetracker.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
