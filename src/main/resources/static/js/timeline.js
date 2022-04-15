@@ -15,6 +15,30 @@ $(document).ready(function() {
     $('#modal_close').on('click', function(e) {
         $('#char_modal').modal('hide');
     });
+
+    $('#new_event').on('click', function(e) {
+        clearInputsForEvent();
+        $('#event_modal').modal('show');
+    });
+    $('#event_save').on('click', function(e) {
+        saveEvent();
+        $('#event_modal').modal('hide');
+    });
+    $('#modal_event_close').on('click', function(e) {
+        $('#event_modal').modal('hide');
+    });
+
+    $('#new_chapter').on('click', function(e) {
+        clearInputsForChapter();
+        $('#chapter_modal').modal('show');
+    });
+    $('#chapter_save').on('click', function(e) {
+        saveChapter();
+        $('#chapter_modal').modal('hide');
+    });
+    $('#modal_chapter_close').on('click', function(e) {
+        $('#chapter_modal').modal('hide');
+    });
 });
 
 function getTimeline() {
@@ -47,6 +71,21 @@ function clearInputsForCharacter() {
     $('#dead_check').prop('checked', false);
 }
 
+function clearInputsForEvent() {
+    $('#event_id_input').val("");
+    $('#event_title_input').val("");
+    $('#event_image_input').val("");
+    $('#event_start_input').val('');
+    $('#event_end_input').val('');
+    $('#event_characters').find('option').prop('selected', 'false');
+    $('#event_chapters').find('option').prop('selected', 'false');
+}
+
+function clearInputsForChapter() {
+    $('#chapter_id_input').val("");
+    $('#chapter_title_input').val("");
+}
+
 function saveCharacter() {
     let character = {};
     character.id = $('#char_id_input').val();
@@ -59,6 +98,43 @@ function saveCharacter() {
         url: "/characters/character",
         dataType: "json",
         data: JSON.stringify(character),
+        contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            //reInitNetwork();
+        }
+    });
+}
+
+function saveEvent() {
+    let event = {};
+    event.id = $('#event_id_input').val();
+    event.title = $('#event_title_input').val();
+    event.image = $('#event_image_input').val();
+    event.start = $('#event_start_input').val();
+    event.end = $('#event_end_input').val();
+    event.characters = $('#event_characters').val();
+    event.chapters = $('#event_chapters').val();
+    $.ajax({
+        method: "POST",
+        url: "/event",
+        dataType: "json",
+        data: JSON.stringify(event),
+        contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            //reInitNetwork();
+        }
+    });
+}
+
+function saveChapter() {
+    let chapter = {};
+    chapter.id = $('#chapter_id_input').val();
+    chapter.title = $('#chapter_title_input').val();
+    $.ajax({
+        method: "POST",
+        url: "/chapter",
+        dataType: "json",
+        data: JSON.stringify(chapter),
         contentType: "application/json; charset=utf-8",
         success : function(data, textStatus, jqXHR) {
             //reInitNetwork();

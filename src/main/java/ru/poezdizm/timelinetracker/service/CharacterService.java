@@ -33,7 +33,7 @@ public class CharacterService {
             Optional<CharacterEntity> optional = characterRepository.findById(request.getId());
             if (optional.isPresent()) entity = optional.get();
         }
-        entity.setName(request.getName());
+        entity.setName(request.getName().trim());
         entity.setImageUrl(request.getImage());
         entity.setIsMain(request.getIsMain());
         entity.setIsDead(request.getIsDead());
