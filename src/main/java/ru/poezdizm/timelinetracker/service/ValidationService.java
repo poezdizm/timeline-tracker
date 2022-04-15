@@ -2,23 +2,10 @@ package ru.poezdizm.timelinetracker.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.poezdizm.timelinetracker.entity.CharacterEntity;
-import ru.poezdizm.timelinetracker.entity.RelationEntity;
-import ru.poezdizm.timelinetracker.entity.RelationTypeEntity;
-import ru.poezdizm.timelinetracker.model.CharacterModel;
-import ru.poezdizm.timelinetracker.model.NetworkModel;
-import ru.poezdizm.timelinetracker.model.RelationModel;
-import ru.poezdizm.timelinetracker.model.RelationTypeModel;
-import ru.poezdizm.timelinetracker.repository.CharacterRepository;
 import ru.poezdizm.timelinetracker.repository.RelationRepository;
-import ru.poezdizm.timelinetracker.repository.RelationTypeRepository;
 import ru.poezdizm.timelinetracker.request.CharacterRequest;
 import ru.poezdizm.timelinetracker.request.RelationRequest;
 import ru.poezdizm.timelinetracker.request.RelationTypeRequest;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +27,8 @@ public class ValidationService {
         } else if (request.getLength() < 100 || request.getLength() > 500) {
             return false;
         }
-        return request.getId() != null || !relationRepository.findAll().stream()
-                .anyMatch(e -> (e.getFrom().equals(request.getFrom()) && e.getTo().equals(request.getTo())) ||
+        return request.getId() != null || relationRepository.findAll().stream()
+                .noneMatch(e -> (e.getFrom().equals(request.getFrom()) && e.getTo().equals(request.getTo())) ||
                         (e.getFrom().equals(request.getTo()) && e.getTo().equals(request.getFrom())));
     }
 
