@@ -4,6 +4,9 @@ $(document).ready(function() {
 
     getTimeline();
 
+    $('#event_start_input').datepicker();
+    $('#event_end_input').datepicker();
+
     $('#new_character').on('click', function(e) {
         clearInputsForCharacter();
         $('#char_modal').modal('show');
@@ -77,8 +80,43 @@ function clearInputsForEvent() {
     $('#event_image_input').val("");
     $('#event_start_input').val('');
     $('#event_end_input').val('');
-    $('#event_characters').find('option').prop('selected', 'false');
-    $('#event_chapters').find('option').prop('selected', 'false');
+
+    $('#event_characters').empty();
+    $('#event_chapters').empty();
+
+    let characters = [];
+    $.ajax({
+        method: "GET",
+        url: "/characters/all",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            characters = data;
+        }
+    });
+    characters.forEach(c => {
+        $('#event_characters').append($('<option>', {
+            value: c.id,
+            text: c.label
+        }));
+    });
+
+    let chapters = [];
+    $.ajax({
+        method: "GET",
+        url: "/chapter",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            chapters = data;
+        }
+    });
+    chapters.forEach(с => {
+        $('#event_chapters').append($('<option>', {
+            value: с.id,
+            text: с.title
+        }));
+    });
 }
 
 function clearInputsForChapter() {

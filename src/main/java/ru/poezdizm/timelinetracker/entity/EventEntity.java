@@ -27,17 +27,27 @@ public class EventEntity {
     private String imageUrl;
 
     @Column(name = "start_date")
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date start;
 
     @Column(name = "end_date")
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date end;
 
     @ManyToMany
+    @JoinTable(
+            name = "events_characters",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "character_id") }
+    )
     private List<CharacterEntity> characters;
 
     @ManyToMany
+    @JoinTable(
+            name = "events_chapters",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "chapter_id") }
+    )
     private List<ChapterEntity> chapters;
 
     @Override

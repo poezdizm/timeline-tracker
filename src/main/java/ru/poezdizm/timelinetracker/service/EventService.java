@@ -30,10 +30,10 @@ public class EventService {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-    private static final String CONTENT_TEMPLATE = "<h4>%s</h4>" +
-                                                    "<p>Участники: %s</p>" +
-                                                    "<p>Главы: %s</p>" +
-                                                    "<img src=\"%s\">";
+    private static final String CONTENT_TEMPLATE = "<h4>%s</h4>";
+    private static final String CONTENT_TEMPLATE_CHAPTERS = "<p>Главы: %s</p>";
+    private static final String CONTENT_TEMPLATE_CHARACTERS = "<p>Участники: %s</p>";
+    private static final String CONTENT_TEMPLATE_IMAGE = "<img height=\"100px\" width=\"100px\" src=\"%s\">";
 
     public EventModel updateEvent(EventRequest request) {
         if (Boolean.FALSE.equals(validationService.validateEvent(request))) {
@@ -62,7 +62,7 @@ public class EventService {
         entity.setChapters(chapters);
 
         entity.setStart(parseDate(request.getStart()));
-        entity.setEnd(parseDate(request.getEnd()));
+        entity.setEnd(request.getEnd() == null || request.getEnd().isEmpty() ? null : parseDate(request.getEnd()));
 
         eventRepository.save(entity);
         return mapEvent(entity);
@@ -81,7 +81,19 @@ public class EventService {
         String characters = entity.getCharacters().stream().map(CharacterEntity::getName).collect(Collectors.joining(", "));
         String chapters = entity.getChapters().stream().map(ChapterEntity::getTitle).collect(Collectors.joining(", "));
 
-        String content = String.format(CONTENT_TEMPLATE, entity.getTitle(), characters, chapters, entity.getImageUrl());
+        String content = String.format(CONTENT_TEMPLATE, entity.getTitle());
+        if (!characters.isEmpty()) {
+            content += CONTENT_TEMPLATE_CHARACTERS;
+            content = String.format(content, characters);
+        }
+        if (!chapters.isEmpty()) {
+            content += CONTENT_TEMPLATE_CHAPTERS;
+            content = String.format(content, chapters);
+        }
+        if (entity.getImageUrl() != null && !entity.getImageUrl().isEmpty()) {
+            content += CONTENT_TEMPLATE_IMAGE;
+            content = String.format(content, entity.getImageUrl());
+        }
         event.setContent(content);
 
         return event;
