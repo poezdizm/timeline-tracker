@@ -97,6 +97,8 @@ function initTimeline(data) {
 
     if (timeline !== null) {
         timeline.destroy();
+        $('.main').unbind('click');
+        $('#t-container').unbind('click');
     }
     let options = {
         zoomMin: 1000 * 60 * 60 * 24 * 6,
@@ -114,13 +116,13 @@ function initTimeline(data) {
         }
     });
 
-    $('.main').one("click", function (e) {
+    $('.main').on("click", function (e) {
         if (e.target === this) {
             $('#network_buttons').removeClass('shown');
             timeline.setSelection([]);
         }
     });
-    $('#t-container').one("click", function (e) {
+    $('#t-container').on("click", function (e) {
         if (e.target === this) {
             $('#network_buttons').removeClass('shown');
             timeline.setSelection([]);
