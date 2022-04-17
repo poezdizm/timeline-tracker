@@ -1,9 +1,13 @@
-let timeline;
+let timeline = null;
 let currentData = [];
 let datepickerStart;
 let datepickerEnd;
 
 $(document).ready(function() {
+
+    $('.button-main').on('click', function (e) {
+        window.location = '/characters';
+    });
 
     getTimeline();
 
@@ -91,6 +95,9 @@ function initTimeline(data) {
     });
     let items = new vis.DataSet(data.events);
 
+    if (timeline !== null) {
+        timeline.destroy();
+    }
     let options = {
         zoomMin: 1000 * 60 * 60 * 24 * 6,
         zoomMax: 1000 * 60 * 60 * 24 * 31 * 12,
@@ -103,9 +110,20 @@ function initTimeline(data) {
         if (timeline.getSelection().length === 0) {
             buttonContainer.removeClass('shown');
         } else {
-            console.log(timeline.getSelection());
-            console.log(currentData.filter(i => i.id === timeline.getSelection()[0]));
             buttonContainer.addClass('shown');
+        }
+    });
+
+    $('.main').one("click", function (e) {
+        if (e.target === this) {
+            $('#network_buttons').removeClass('shown');
+            timeline.setSelection([]);
+        }
+    });
+    $('#t-container').one("click", function (e) {
+        if (e.target === this) {
+            $('#network_buttons').removeClass('shown');
+            timeline.setSelection([]);
         }
     });
 }
@@ -235,7 +253,7 @@ function saveCharacter() {
         data: JSON.stringify(character),
         contentType: "application/json; charset=utf-8",
         success : function(data, textStatus, jqXHR) {
-            //reInitNetwork();
+            getTimeline();
         }
     });
 }
@@ -256,7 +274,7 @@ function saveEvent() {
         data: JSON.stringify(event),
         contentType: "application/json; charset=utf-8",
         success : function(data, textStatus, jqXHR) {
-            //reInitNetwork();
+            getTimeline();
         }
     });
 }
@@ -272,7 +290,7 @@ function saveChapter() {
         data: JSON.stringify(chapter),
         contentType: "application/json; charset=utf-8",
         success : function(data, textStatus, jqXHR) {
-            //reInitNetwork();
+            getTimeline();
         }
     });
 }
@@ -284,7 +302,7 @@ function deleteEvent(id) {
         url: url,
         dataType: "json",
         success : function(data, textStatus, jqXHR) {
-            //reInitNetwork();
+            getTimeline();
         }
     });
 }

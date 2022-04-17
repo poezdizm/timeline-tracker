@@ -10,6 +10,10 @@ $(document).ready(function() {
         notation: 'hex'
     });
 
+    $('.button-main').on('click', function (e) {
+        window.location = '/timeline';
+    });
+
     getNetwork();
     $('.network-choose').on('click', function(e) {
         if (!$(this).hasClass('disabled')) {
