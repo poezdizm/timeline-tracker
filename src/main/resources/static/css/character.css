@@ -4,14 +4,6 @@
     width: 100%;
 }
 
-.button-container {
-    width: 15%;
-    margin-right: 3%;
-    margin-top: 3%;
-    float: right;
-    position: relative;
-}
-
 .opt-button-container {
     width: 5%;
     margin-left: 3%;
@@ -20,14 +12,16 @@
     position: relative;
 }
 
-.expandable {
-    overflow: hidden;
-    transition: all .5s ease-in-out;
-    height: 0;
+.button-container {
+    width: 15%;
+    margin-right: 3%;
+    margin-top: 3%;
+    float: right;
+    position: relative;
 }
 
 .shown {
-    height: 500px;
+    height: 500px !important;
 }
 
 .button-row {
@@ -37,79 +31,6 @@
     width: 100%;
 }
 
-.network-button {
-    font-family: 'Verdana', serif;
-    z-index: 10;
-    font-size: x-large;
-    font-weight: bold;
-    background-color: #959079;
-    border-radius: 10px;
-    box-shadow: 2px 5px 5px #898989;
-    transition: all 0.5s;
-    position: relative;
-    line-height: 50px;
-    text-align: center;
-}
-
-.modal-network-button {
-    border: 0;
-    box-shadow: none !important;
-    color: black !important;
-    background-color: goldenrod !important;
-    line-height: 30px !important;
-    font-size: large !important;
-}
-
-.form-group {
-    margin-bottom: 10px;
-}
-
 .custom-checkbox {
     margin-bottom: 10px;
-}
-
-.network-button-active {
-    font-family: 'Verdana', serif;
-    z-index: 10;
-    font-size: x-large;
-    font-weight: bold;
-    background-color: goldenrod;
-    border-radius: 10px;
-    box-shadow: 2px 5px 5px #898989;
-    transition: all 0.5s;
-    position: relative;
-    line-height: 50px;
-    text-align: center;
-}
-
-.network-button-active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    background-color: rgba(255,255,255,0.1);
-    transition: all 0.3s;
-}
-.network-button-active:hover::before {
-    opacity: 0 ;
-    transform: scale(0.5,0.5);
-}
-.network-button-active::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0;
-    transition: all 0.3s;
-    transform: scale(1.2,1.2);
-}
-.network-button-active:hover::after {
-    opacity: 1;
-    transform: scale(1,1);
 }

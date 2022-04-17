@@ -30,6 +30,19 @@
         </div>
     </div>
     <div class="container-fluid main">
+        <div id="network_buttons" class="container button-container expandable">
+            <div class="row button-row non-group-button">
+                <div class="network-button-active network-select timeline-item-edit">
+                    <span>Редактировать</span>
+                </div>
+            </div>
+            <div class="row button-row non-group-button">
+                <div class="network-button-active network-select timeline-item-delete">
+                    <span>Удалить</span>
+                </div>
+            </div>
+        </div>
+
         <div style="padding-top: 10%;max-width: 100%;">
             <div id="timeline_vis"></div>
         </div>
@@ -74,6 +87,23 @@
             <div class="modal-footer">
                 <button id="modal_event_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
                 <button id="event_save" type="button" class="btn btn-primary modal-network-button network-button-active">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete_event_modal" tabindex="-1" role="dialog" aria-labelledby="delete_event_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delete_event_modal_label">Удалить событие</h5>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить данный элемент? Это действие нельзя откатить.
+            </div>
+            <div class="modal-footer">
+                <button id="delete_modal_close" type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="delete_event" type="button" class="btn btn-danger">Удалить</button>
             </div>
         </div>
     </div>

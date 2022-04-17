@@ -22,3 +22,23 @@
 .vis-panel.vis-bottom, .vis-panel.vis-center, .vis-panel.vis-top {
     border-color: black;
 }
+
+.button-container {
+    width: 15%;
+    margin-right: 3%;
+    margin-top: 2%;
+    float: right;
+    position: relative;
+}
+
+.shown {
+    height: 150px !important;
+}
+
+.button-row {
+    min-height: 10%;
+    max-height: 50%;
+    margin-top: 5%;
+    width: 100%;
+}
+

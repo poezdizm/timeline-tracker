@@ -1,11 +1,18 @@
 let timeline;
+let currentData = [];
+let datepickerStart;
+let datepickerEnd;
 
 $(document).ready(function() {
 
     getTimeline();
 
-    $('#event_start_input').datepicker();
-    $('#event_end_input').datepicker();
+    datepickerStart = $('#event_start_input').datepicker({
+        defaultViewDate: {year: 2017, month: 5, day: 1}
+    });
+    datepickerEnd = $('#event_end_input').datepicker({
+        defaultViewDate: {year: 2017, month: 5, day: 1}
+    });
 
     $('#new_character').on('click', function(e) {
         clearInputsForCharacter();
@@ -42,6 +49,24 @@ $(document).ready(function() {
     $('#modal_chapter_close').on('click', function(e) {
         $('#chapter_modal').modal('hide');
     });
+
+    $('.timeline-item-edit').on('click', function(e) {
+        setInputsForEvent(currentData.filter(i => i.id === timeline.getSelection()[0])[0]);
+        $('#event_modal').modal('show');
+    });
+
+    $('.timeline-item-delete').on('click', function(e) {
+        $('#delete_event_modal_label')
+            .text('Удалить событие ' + currentData.filter(i => i.id === timeline.getSelection()[0])[0].title);
+        $('#delete_event_modal').modal('show');
+    });
+    $('#delete_event').on('click', function(e) {
+        deleteEvent(timeline.getSelection()[0]);
+        $('#delete_event_modal').modal('hide');
+    });
+    $('#delete_modal_close').on('click', function(e) {
+        $('#delete_event_modal').modal('hide');
+    });
 });
 
 function getTimeline() {
@@ -59,6 +84,8 @@ function getTimeline() {
 function initTimeline(data) {
     let container = document.getElementById('timeline_vis');
 
+    currentData = data.events;
+
     data.events.forEach(e => {
         e.className = "white";
     });
@@ -70,6 +97,17 @@ function initTimeline(data) {
     };
 
     timeline = new vis.Timeline(container, items, options);
+
+    timeline.on("click", function (e) {
+        var buttonContainer = $('#network_buttons');
+        if (timeline.getSelection().length === 0) {
+            buttonContainer.removeClass('shown');
+        } else {
+            console.log(timeline.getSelection());
+            console.log(currentData.filter(i => i.id === timeline.getSelection()[0]));
+            buttonContainer.addClass('shown');
+        }
+    });
 }
 
 function clearInputsForCharacter() {
@@ -117,13 +155,66 @@ function clearInputsForEvent() {
             chapters = data;
         }
     });
-    chapters.forEach(с => {
+    chapters.forEach(c => {
         $('#event_chapters').append($('<option>', {
-            value: с.id,
-            text: с.title
+            value: c.id,
+            text: c.title
         }));
     });
 }
+
+function setInputsForEvent(item) {
+    $('#event_id_input').val(item.id);
+    $('#event_title_input').val(item.title);
+    $('#event_image_input').val(item.imageUrl);
+    console.log(item.start);
+    $('#event_start_input').datepicker("setDate", new Date(Date.parse(item.start)));
+    if (item.end === undefined || item.end === null || item.end === "") {
+        $('#event_end_input').val("");
+    } else {
+        $('#event_end_input').datepicker("update", new Date(Date.parse(item.end)));
+    }
+
+    $('#event_characters').empty();
+    $('#event_chapters').empty();
+
+    let characters = [];
+    $.ajax({
+        method: "GET",
+        url: "/characters/all",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            characters = data;
+        }
+    });
+    characters.forEach(c => {
+        $('#event_characters').append($('<option>', {
+            value: c.id,
+            text: c.label,
+            selected: item.characterIds.includes(c.id)
+        }));
+    });
+
+    let chapters = [];
+    $.ajax({
+        method: "GET",
+        url: "/chapter",
+        async: false,
+        dataType: "json",
+        success : function(data, textStatus, jqXHR) {
+            chapters = data;
+        }
+    });
+    chapters.forEach(c => {
+        $('#event_chapters').append($('<option>', {
+            value: c.id,
+            text: c.title,
+            selected: item.chapterIds.includes(c.id)
+        }));
+    });
+}
+
 
 function clearInputsForChapter() {
     $('#chapter_id_input').val("");
@@ -180,6 +271,18 @@ function saveChapter() {
         dataType: "json",
         data: JSON.stringify(chapter),
         contentType: "application/json; charset=utf-8",
+        success : function(data, textStatus, jqXHR) {
+            //reInitNetwork();
+        }
+    });
+}
+
+function deleteEvent(id) {
+    let url = "/event/delete?id=" + id;
+    $.ajax({
+        method: "POST",
+        url: url,
+        dataType: "json",
         success : function(data, textStatus, jqXHR) {
             //reInitNetwork();
         }

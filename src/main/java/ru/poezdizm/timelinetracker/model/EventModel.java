@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +19,13 @@ public class EventModel {
     private Date start;
 
     private Date end;
+
+    private String title;
+
+    private List<Integer> characterIds;
+
+    private List<Integer> chapterIds;
+
+    private String imageUrl;
 
 }

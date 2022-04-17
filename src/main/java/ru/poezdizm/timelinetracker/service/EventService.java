@@ -77,6 +77,10 @@ public class EventService {
         event.setId(entity.getId());
         event.setStart(entity.getStart());
         event.setEnd(entity.getEnd());
+        event.setTitle(entity.getTitle());
+        event.setImageUrl(entity.getImageUrl());
+        event.setCharacterIds(entity.getCharacters().stream().map(CharacterEntity::getId).toList());
+        event.setChapterIds(entity.getChapters().stream().map(ChapterEntity::getId).toList());
 
         String characters = entity.getCharacters().stream().map(CharacterEntity::getName).collect(Collectors.joining(", "));
         String chapters = entity.getChapters().stream().map(ChapterEntity::getTitle).collect(Collectors.joining(", "));
