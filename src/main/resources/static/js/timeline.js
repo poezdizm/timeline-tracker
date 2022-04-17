@@ -59,9 +59,15 @@ function getTimeline() {
 function initTimeline(data) {
     let container = document.getElementById('timeline_vis');
 
+    data.events.forEach(e => {
+        e.className = "white";
+    });
     let items = new vis.DataSet(data.events);
 
-    let options = {};
+    let options = {
+        zoomMin: 1000 * 60 * 60 * 24 * 6,
+        zoomMax: 1000 * 60 * 60 * 24 * 31 * 12,
+    };
 
     timeline = new vis.Timeline(container, items, options);
 }

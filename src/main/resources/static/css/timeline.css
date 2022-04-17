@@ -1,4 +1,24 @@
-.event-image {
-    width:20%;
-    height:20%;
+.vis-item.white {
+    background-color: white;
+    border-color: grey;
+    color: black;
+}
+
+.vis-item.vis-selected {
+    background-color: white;
+    border-color: goldenrod;
+    color: black;
+}
+
+.vis-time-axis .vis-grid.vis-major {
+    border-color: black;
+    border-left-width: medium;
+}
+
+.vis-time-axis .vis-grid.vis-minor {
+    border-color: black;
+}
+
+.vis-panel.vis-bottom, .vis-panel.vis-center, .vis-panel.vis-top {
+    border-color: black;
 }
