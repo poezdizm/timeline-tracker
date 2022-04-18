@@ -38,7 +38,7 @@ public class ValidationService {
 
     public Boolean validateEvent(EventRequest request) {
         return request.getTitle() != null && !request.getTitle().trim().isEmpty() &&
-                request.getTitle().trim().matches("[a-zA-Zа-яА-Я0-9 ]+") &&
+                request.getTitle().trim().matches("[\"a-zA-Zа-яА-Я0-9 .,-]+") &&
                 request.getStart() != null && request.getStart().trim().matches("^\\d{2}.\\d{2}.\\d{4}$") &&
                 (request.getEnd() == null || request.getEnd().isEmpty() || request.getEnd().trim().matches("^\\d{2}.\\d{2}.\\d{4}$")) &&
                 !request.getCharacters().contains(null) && !request.getChapters().contains(null);
@@ -46,7 +46,7 @@ public class ValidationService {
 
     public Boolean validateChapter(ChapterRequest request) {
         return request.getTitle() != null && !request.getTitle().trim().isEmpty() &&
-                request.getTitle().trim().matches("[\"a-zA-Zа-яА-Я0-9 .-]+");
+                request.getTitle().trim().matches("[\"a-zA-Zа-яА-Я0-9 .,-]+");
     }
 
 }

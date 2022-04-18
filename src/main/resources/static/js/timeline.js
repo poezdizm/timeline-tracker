@@ -103,6 +103,7 @@ function initTimeline(data) {
     let options = {
         zoomMin: 1000 * 60 * 60 * 24 * 6,
         zoomMax: 1000 * 60 * 60 * 24 * 31 * 12,
+        maxHeight: 700
     };
 
     timeline = new vis.Timeline(container, items, options);
