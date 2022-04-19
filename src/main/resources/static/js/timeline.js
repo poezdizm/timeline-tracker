@@ -91,7 +91,7 @@ function initTimeline(data) {
     currentData = data.events;
 
     data.events.forEach(e => {
-        e.className = "white";
+        e.className = "white event-item";
     });
     let items = new vis.DataSet(data.events);
 

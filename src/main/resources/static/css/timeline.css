@@ -42,3 +42,11 @@
     width: 100%;
 }
 
+.event-item {
+    max-width:300px;
+}
+
+.event-item > div > h4, p {
+    white-space:break-spaces !important;
+}
+
